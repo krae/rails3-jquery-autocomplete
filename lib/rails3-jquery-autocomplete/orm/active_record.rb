@@ -41,12 +41,11 @@ module Rails3JQueryAutocomplete
         like_clause = (postgres? ? 'ILIKE' : 'LIKE')
         str = ""
         ary = []
-        methods.each_with_index do |method|
-          str += " OR " if index > 0 
-          str += " LOWER(#{table_name}.#{method}) #{like_clause} ?"
+        methods.each do |method|
+          str += " LOWER(#{table_name}.#{method}) #{like_clause} ? OR "
           ary << "#{(is_full_search ? '%' : '')}#{term.downcase}%"
         end
-        [str] + ary
+        [str[0..str.length-4]] + ary
       end
 
       def postgres?
